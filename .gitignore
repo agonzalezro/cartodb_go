@@ -23,3 +23,4 @@ _testmain.go
 *.test
 
 cartodb_go
+examples/examples

@@ -3,16 +3,17 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/agonzalezro/cartodb_go"
 )
 
 func main() {
-	apiKey := "dd3cc8a9221e19576b8ac025c03e7b00738f874c"
-	cartodbDomain := "alex"
+	apiKey := os.Getenv("CARTODB_API_KEY")
+	username := os.Getenv("CARTODB_USERNAME")
 
-	client := cartodb_go.NewCartoDBAPIKey(apiKey, cartodbDomain, "", "", "")
-	response, err := client.Sql("select * from tweets", false, "json")
+	client := cartodb.NewAPIKeyClient(apiKey, username, "", "", "")
+	response, err := client.SQL("select * from tweets", "GET", "json")
 	if err != nil {
 		fmt.Print(err)
 		return
