@@ -20,7 +20,7 @@ import (
 type BaseClient struct {
 	maxGetQueryLength int
 
-	resourceURL string
+	ResourceURL string
 }
 
 // APIKeyClient is the struct defined to interact with CartoDB API being
@@ -45,7 +45,7 @@ func NewBaseClient(username string, host string, protocol string, apiVersion str
 
 	return &BaseClient{
 		maxGetQueryLength: 2048,
-		resourceURL:       fmt.Sprintf("%s://%s.%s/api/%s/sql", protocol, username, host, apiVersion),
+		ResourceURL:       fmt.Sprintf("%s://%s.%s/api/%s/sql", protocol, username, host, apiVersion),
 	}
 }
 
@@ -78,22 +78,31 @@ func (c BaseClient) SQL(sql string, method string, format string) (response *htt
 	values := url.Values{"q": {sql}, "format": {format}}
 
 	if method == "GET" {
-		c.resourceURL = fmt.Sprintf("%s?%s", c.resourceURL, values.Encode())
+		c.ResourceURL = fmt.Sprintf("%s?%s", c.ResourceURL, values.Encode())
 	} else {
 		params = values
 	}
 
-	req, _ := http.NewRequest(method, c.resourceURL, strings.NewReader(params.Encode()))
+	req, _ := http.NewRequest(method, c.ResourceURL, strings.NewReader(params.Encode()))
 
 	response, err = httpClient.Do(req)
 	return
 }
 
 func (c APIKeyClient) Req(httpURL string, httpMethod string, httpHeaders map[string]string, body string) (response *http.Response, err error) {
+	var params string
+
 	httpClient := &http.Client{}
 
-	params := url.Values{"api_key": {c.apiKey}, "body": {body}}
-	req, _ := http.NewRequest(httpMethod, httpURL, strings.NewReader(params.Encode()))
+	values := url.Values{"api_key": {c.apiKey}, "q": {body}}.Encode()
+
+	if httpMethod == "GET" {
+		httpURL = fmt.Sprintf("%s?%s", httpURL, values)
+	} else {
+		params = values
+	}
+
+	req, _ := http.NewRequest(httpMethod, httpURL, strings.NewReader(params))
 	for k, v := range httpHeaders {
 		req.Header.Add(k, v)
 	}
