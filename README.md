@@ -7,8 +7,10 @@ CartoDB client for Golang
 
 The cartodb_go project is a Python client for the [CartoDB SQL
 API](http://developers.cartodb.com/documentation/sql-api.html) that supports
-[authentication using OAuth or API
+[authentication using API
 key](http://developers.cartodb.com/documentation/sql-api.html#authentication).
+CartoDB also support OAuth authentication, but it's not implemented here yet
+(and it's not going to be soon).
 
 Installation
 ------------
@@ -34,22 +36,10 @@ Basically the library is going to take care of the client creation for you, but
 after doing a request (Sql() || Req()) you will need to unmarshall the
 response.Body or do whatever you want with it.
 
-WIP
-===
-
-Things working
---------------
-
-- sql() method.
-
-Things NOT working
-------------------
-
-- the Req() method for the API Key client was not tested.
-- everything else :(
-
 TODO
 ----
 
+- the Req() method for the API Key client was not tested yet.
+- in some point in the future it could be nice to have OAuth authentication too.
 - tests & CI.
 - throw different errors when the http status code is not 200?
