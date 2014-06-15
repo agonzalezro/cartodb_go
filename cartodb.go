@@ -23,12 +23,6 @@ type BaseClient struct {
 	resourceURL string
 }
 
-// OAuthClient is the struct defined to interact with CartoDB API being
-// authorised with OAuth.
-type OAuthClient struct {
-	BaseClient
-}
-
 // APIKeyClient is the struct defined to interact with CartoDB API being
 // autheorised with the API Key.
 type APIKeyClient struct {
@@ -52,13 +46,6 @@ func NewBaseClient(username string, host string, protocol string, apiVersion str
 	return &BaseClient{
 		maxGetQueryLength: 2048,
 		resourceURL:       fmt.Sprintf("%s://%s.%s/api/%s/sql", protocol, username, host, apiVersion),
-	}
-}
-
-// NewOAuthClient returns a CartoDB client using the OAuth authentication.
-func NewOAuthClient(key string, secret string, email string, password string, username string, host string, protocol string, apiVersion string) OAuthClient {
-	return OAuthClient{
-		BaseClient: *NewBaseClient(username, host, protocol, apiVersion),
 	}
 }
 
