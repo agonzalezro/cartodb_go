@@ -20,10 +20,9 @@ Examples
 
 You can find examples of usage on the `examples/` folder of this repo.
 
-To run the example you need to set `API_KEY` & `USERNAME` env variable with the
-values for your CartoDB account. For example:
+In some of them you will need to set some environment variables. For example:
 
-    CARTODB_API_KEY=123 CARTODB_USERNAME=alex go run examples/sql.go
+    CARTODB_API_KEY=123 go run examples/sql/api_key/example.go
 
 How it works?
 -------------
@@ -41,7 +40,7 @@ WIP
 Things working
 --------------
 
-- sql method when user the api key client.
+- sql() method.
 
 Things NOT working
 ------------------

@@ -4,7 +4,7 @@
 // authorised using the API Key provided by CartoDB.
 //
 // Included on the source of this packages you are going to find examples under
-// the examples/ folder.
+// the "examples/" folder.
 package cartodb
 
 import (
@@ -15,7 +15,9 @@ import (
 	"strings"
 )
 
-type baseClient struct {
+// BaseClient is the struct defined to interact with CartoDB API without any
+// kind of authorization
+type BaseClient struct {
 	maxGetQueryLength int
 
 	resourceURL string
@@ -24,20 +26,19 @@ type baseClient struct {
 // OAuthClient is the struct defined to interact with CartoDB API being
 // authorised with OAuth.
 type OAuthClient struct {
-	baseClient
-
-	accessTokenURL string
+	BaseClient
 }
 
 // APIKeyClient is the struct defined to interact with CartoDB API being
 // autheorised with the API Key.
 type APIKeyClient struct {
-	baseClient
+	BaseClient
 
 	apiKey string
 }
 
-func newBaseClient(username string, host string, protocol string, apiVersion string) *baseClient {
+// NewBaseClient returns a CartoDB client without any kind of authentication.
+func NewBaseClient(username string, host string, protocol string, apiVersion string) *BaseClient {
 	if host == "" {
 		host = "cartodb.com"
 	}
@@ -48,17 +49,16 @@ func newBaseClient(username string, host string, protocol string, apiVersion str
 		apiVersion = "v2"
 	}
 
-	return &baseClient{
+	return &BaseClient{
 		maxGetQueryLength: 2048,
 		resourceURL:       fmt.Sprintf("%s://%s.%s/api/%s/sql", protocol, username, host, apiVersion),
 	}
 }
 
 // NewOAuthClient returns a CartoDB client using the OAuth authentication.
-func NewOAuthClient(username string, host string, protocol string, apiVersion string) OAuthClient {
+func NewOAuthClient(key string, secret string, email string, password string, username string, host string, protocol string, apiVersion string) OAuthClient {
 	return OAuthClient{
-		baseClient:     *newBaseClient(username, host, protocol, apiVersion),
-		accessTokenURL: fmt.Sprintf("%s://%s.%s/oauth/access_token", protocol, username, host),
+		BaseClient: *NewBaseClient(username, host, protocol, apiVersion),
 	}
 }
 
@@ -68,14 +68,14 @@ func NewAPIKeyClient(apiKey string, username string, host string, protocol strin
 		log.Println("WAR: You are using this API key auth method with http")
 	}
 	return &APIKeyClient{
-		baseClient: *newBaseClient(username, host, protocol, apiVersion),
+		BaseClient: *NewBaseClient(username, host, protocol, apiVersion),
 		apiKey:     apiKey,
 	}
 }
 
 // SQL is going to call CartoDB with the given SQL statement and return a response object.
 // Is the user's responsability to know what to do with the response.Body.
-func (c baseClient) SQL(sql string, method string, format string) (response *http.Response, err error) {
+func (c BaseClient) SQL(sql string, method string, format string) (response *http.Response, err error) {
 	var params url.Values
 
 	httpClient := &http.Client{}
