@@ -3,7 +3,7 @@ CartoDB client for Golang
 
 [![GoDoc](https://godoc.org/github.com/agonzalezro/cartodb_go?status.png)](https://godoc.org/github.com/agonzalezro/cartodb_go)
 
-The cartodb_go project is a Python client for the [CartoDB SQL
+The cartodb_go project is a Go client for the [CartoDB SQL
 API](http://developers.cartodb.com/documentation/sql-api.html) that supports
 [authentication using API
 key](http://developers.cartodb.com/documentation/sql-api.html#authentication).
